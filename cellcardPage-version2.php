@@ -1,4 +1,4 @@
-<!-- 
+<!-- !!
 Copyright © 2014 The Regents of the University of Michigan
  
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,9 +23,48 @@ Date: July 2011 - December 2014
 -->
 
 <?php 
-include_once('../inc/functions.php');
-$db = ADONewConnection($driver);
-$db->Connect($host, $username, $password, $database);
+include_once('Pdo_methods.php');
+$pdo = new PdoMethods();
+$sql = "SELECT * FROM t_cellcard";
+$records = $pdo->selectNotBinded($sql);
+
+foreach($records as $record) {
+
+// create a function that will copy this sheet and create a new card
+// use call <?php echo($c_intro)>//
+$CL_id = $record['c_CL_id'];
+$cell_name = $record['c_name'];
+$cellcard_id = $record['c_cellcard_id'];
+$cell_label = $record['c_cell_label'];
+$description = $record['c_description'];
+$definition = $record['c_definition'];
+$lineage = $record['c_lineage'];
+$cell_location = $record['c_cell_location'];
+$connection_vicinity = $record['c_onnection_vicinity'];
+$go_terms = $record['c_GO_terms'];
+$ligand = $record['c_ligand'];
+$receptor = $record['c_receptor'];
+$neighbor_cell = $record['c_neighbor_cell'];
+$ligand_receptor_target_cell = $record['c_ligand_receptor_target_cell'];
+$gene_gene_interaction = $record['c_gene_gene_interaction'];
+$gene_expression_profile = $record['c_gene_expression_profile'];
+$pathway = $record['c_pathway'];
+$image_location = $record['c_image_location'];
+$cell_line_cell = $record['c_cell_line_cell'];
+$clinical_significance = $record['c_clinical_significance'];
+$reference = $record['c_reference'];
+$intro_fig_location = $record['c_ntro_fig_location'];
+$intro_fig_description = $record['c_intro_fig_description'];
+$cell_location_uberon_ID = $record['c_cell_location_uberon_ID'];
+$image_name = $record['c_image_name'];
+$synonyms = $record['c_synonyms'];
+$hierarchy = $record['c_hierarchy'];
+$hierarchy_description = $record['c_heiarchy_description'];
+
+}
+
+// write a regular expression to separate links, IDs, and references from the rest of the string
+
 header("Content-type: text/html; charset=UTF-8"); ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -47,7 +86,7 @@ header("Content-type: text/html; charset=UTF-8"); ?>
 <div id="mainbody">
 <!-- InstanceBeginEditable name="Main" -->
 
-<h3><span class="header_darkred">Podocyte (CL_0000653)</span></h3>	
+<h3><span class="header_darkred">Podocyte (<?php echo $CL_id ?>)</span></h3>	
 	
 <?php 
 $vali=new Validation($_REQUEST);
@@ -89,13 +128,13 @@ if (!$rs->EOF)
 
 <p> <?php //call image description ?> </p>
 
-<p style="font-weight:bold; font-size:14px; color:#2A1F55">Cell Ontology (CL) ID: <a href="http://purl.obolibrary.org/obo/CL_0000653"><?php //get cell ID ?></a></p>
+<p style="font-weight:bold; font-size:14px; color:#2A1F55">Cell Ontology (CL) ID: <a href="http://purl.obolibrary.org/obo/CL_0000653"><?php echo $CL_id?></a></p>
 	
-	<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>CL definition:</strong><?php //get cell definition ?></p>
-	<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Synonyms:</strong><?php //get synonyms ?></p>
+	<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>CL definition:</strong><?php echo $definition ?></p>
+	<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Synonyms:</strong><?php echo $synonyms?></p>
 	
 <p style="font-weight:bold; font-size:14px; color:#2A1F55">Cell Hierarchy (defined by CL)</p>
-	<p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://purl.obolibrary.org/obo/CL_0000653"><?php //get cell name ?>hierarchy</a> according to the Cell Ontology (CL): </p>
+	<p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://purl.obolibrary.org/obo/CL_0000653"><?php echo $hierarchy?>hierarchy</a> according to the Cell Ontology (CL): </p>
 	<blockquote>
 	<p><a href="/images/podocyte_hierarchy.png" target="_blank"><img src="../images/podocyte_hierarchy.png" alt="podocyte hierarchy" height="150" border="0"></a></p>
 		<p><?php // get cell hierarchy image description ?></p>
@@ -109,9 +148,9 @@ if (!$rs->EOF)
 	<p>&nbsp;&nbsp;&nbsp;&nbsp;See more: check the image below, and check the <a href="renal_corpuscle_connectome.php">Renal Corpuscle connectome</a> card page. </p> 
 	
 <p style="font-weight:bold; font-size:14px; color:#2A1F55">Lineage</p>	
-	<p>&nbsp;&nbsp;&nbsp;&nbsp;The kidney, including the kidney epithelial cells, arises from OSR1+ mesenchymal progenitor cells in the intermediate mesoderm. As a type of kidney epithelial cells, podocytes arise from cap mesenchyme progenitor cells and require activation of SIX2, PAX2 and WT1. Ref: <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4163204/"><em>Shankland et al., 2014</em></a>. </p>
+	<p>&nbsp;&nbsp;&nbsp;&nbsp; <?php echo $lineage; ?> Ref: <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4163204/"><em>Shankland et al., 2014</em></a>. </p>
 	
-<p style="font-weight:bold; font-size:14px; color:#2A1F55">Key Gene Ontology Terms associated with Podocyte </p>	
+<p style="font-weight:bold; font-size:14px; color:#2A1F55">Key Gene Ontology Terms associated with <?php echo $cell_name; ?> </p>	
 	<!--p>&nbsp;&nbsp;&nbsp;&nbsp;Podocytes are associated with the following GO terms: -->
 		<ul>
 			<li><strong>Podocyte foot process</strong> (<a href="http://purl.obolibrary.org/obo/GO_0098846">GO_0098846</a>): The podocyte foot processes called <em>pedicels</em> wrap around the capillaries and leave slits between them. Blood is filtered through these slits, each known as a filtration slit, slit diaphragm, or slit pore. </li>				
